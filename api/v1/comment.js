@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const jwt = require('jsonwebtoken');
-const { accessTokenSecret } = require('../config');
+const { accessTokenSecret } = require('../../config');
 
-const CommentService = require('../services/comment');
-const ReplyService = require('../services/reply');
+const CommentService = require('../../services/comment');
+const ReplyService = require('../../services/reply');
 
 const authenticateJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -31,7 +31,13 @@ router.post('/', authenticateJWT, async (req, res, next) => {
 
     const result = await CommentService.AddComment(commentData, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.patch('/:commentId', authenticateJWT, async (req, res, next) => {
@@ -45,7 +51,13 @@ router.patch('/:commentId', authenticateJWT, async (req, res, next) => {
         user
     );
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.delete('/:commentId', authenticateJWT, async (req, res, next) => {
@@ -54,7 +66,13 @@ router.delete('/:commentId', authenticateJWT, async (req, res, next) => {
 
     const result = await CommentService.DeleteComment(commentId, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.get('/:commentId', authenticateJWT, async (req, res, next) => {
@@ -62,7 +80,13 @@ router.get('/:commentId', authenticateJWT, async (req, res, next) => {
 
     const result = await CommentService.ViewComment(commentId);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 // Reply
@@ -72,7 +96,13 @@ router.get('/:commentId/reply', authenticateJWT, async (req, res, next) => {
 
     const result = await ReplyService.GetReply(commentId, options);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 // CommentLike
@@ -82,7 +112,13 @@ router.post('/like', authenticateJWT, async (req, res, next) => {
 
     const result = await CommentService.AddCommentLike(commentId, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.post('/unlike', authenticateJWT, async (req, res, next) => {
@@ -91,7 +127,13 @@ router.post('/unlike', authenticateJWT, async (req, res, next) => {
 
     const result = await CommentService.RemoveCommentLike(commentId, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 module.exports = router;

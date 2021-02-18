@@ -37,9 +37,9 @@ app.use(async (req, res, next) => {
 });
 
 // Routes
-app.use('/user', require('./api/user'));
-app.use('/post', require('./api/post'));
-app.use('/comment', require('./api/comment'));
-app.use('/reply', require('./api/reply'));
+app.use('/v1/user', require('./api/v1/user'));
+app.use('/v1/post', require('./api/v1/post'));
+app.use('/v1/comment', require('./api/v1/comment'));
+app.use('/v1/reply', require('./api/v1/reply'));
 
 module.exports = app;

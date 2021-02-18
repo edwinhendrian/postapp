@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const jwt = require('jsonwebtoken');
-const { accessTokenSecret } = require('../config');
+const { accessTokenSecret } = require('../../config');
 
-const UserService = require('../services/user');
+const UserService = require('../../services/user');
 
 const authenticateJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -28,7 +28,13 @@ router.post('/register', async (req, res, next) => {
 
     const result = await UserService.SignUp(userData);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.post('/login', async (req, res, next) => {
@@ -36,7 +42,13 @@ router.post('/login', async (req, res, next) => {
 
     const result = await UserService.SignIn(userData);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.post('/token', async (req, res, next) => {
@@ -46,7 +58,13 @@ router.post('/token', async (req, res, next) => {
 
     const result = await UserService.Token(token);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 module.exports = router;

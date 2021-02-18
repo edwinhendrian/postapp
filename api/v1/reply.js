@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const jwt = require('jsonwebtoken');
-const { accessTokenSecret } = require('../config');
+const { accessTokenSecret } = require('../../config');
 
-const ReplyService = require('../services/reply');
+const ReplyService = require('../../services/reply');
 
 const authenticateJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -30,7 +30,13 @@ router.post('/', authenticateJWT, async (req, res, next) => {
 
     const result = await ReplyService.AddReply(replyData, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.patch('/:replyId', authenticateJWT, async (req, res, next) => {
@@ -40,7 +46,13 @@ router.patch('/:replyId', authenticateJWT, async (req, res, next) => {
 
     const result = await ReplyService.UpdateReply(replyId, description, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.delete('/:replyId', authenticateJWT, async (req, res, next) => {
@@ -49,7 +61,13 @@ router.delete('/:replyId', authenticateJWT, async (req, res, next) => {
 
     const result = await ReplyService.DeleteReply(replyId, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.get('/:replyId', authenticateJWT, async (req, res, next) => {
@@ -57,7 +75,13 @@ router.get('/:replyId', authenticateJWT, async (req, res, next) => {
 
     const result = await ReplyService.ViewReply(replyId);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 // ReplyLike
@@ -67,7 +91,13 @@ router.post('/like', authenticateJWT, async (req, res, next) => {
 
     const result = await ReplyService.AddReplyLike(replyId, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.post('/unlike', authenticateJWT, async (req, res, next) => {
@@ -76,7 +106,13 @@ router.post('/unlike', authenticateJWT, async (req, res, next) => {
 
     const result = await ReplyService.RemoveReplyLike(replyId, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 module.exports = router;

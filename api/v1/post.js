@@ -4,10 +4,10 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
-const { accessTokenSecret } = require('../config');
+const { accessTokenSecret } = require('../../config');
 
-const CommentService = require('../services/comment');
-const PostService = require('../services/post');
+const CommentService = require('../../services/comment');
+const PostService = require('../../services/post');
 
 const authenticateJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -28,7 +28,7 @@ const authenticateJWT = (req, res, next) => {
 
 const diskStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '../uploads'));
+        cb(null, path.join(__dirname, '../../uploads'));
     },
     filename: function (req, file, cb) {
         const { user } = req;
@@ -54,7 +54,13 @@ router.post(
 
         const result = await PostService.AddPost(file, description, user);
 
-        return res.json(result);
+        if (result.error)
+            return res.status(400).send({ status: 400, error: result.error });
+        else
+            return res.json({
+                status: 200,
+                data: result
+            });
     }
 );
 
@@ -65,7 +71,13 @@ router.patch('/:postId', authenticateJWT, async (req, res, next) => {
 
     const result = await PostService.UpdatePost(postId, description, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.delete('/:postId', authenticateJWT, async (req, res, next) => {
@@ -74,7 +86,13 @@ router.delete('/:postId', authenticateJWT, async (req, res, next) => {
 
     const result = await PostService.DeletePost(postId, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.get('/', authenticateJWT, async (req, res, next) => {
@@ -82,7 +100,13 @@ router.get('/', authenticateJWT, async (req, res, next) => {
 
     const result = await PostService.GetPost(options);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.get('/:postId', authenticateJWT, async (req, res, next) => {
@@ -90,7 +114,13 @@ router.get('/:postId', authenticateJWT, async (req, res, next) => {
 
     const result = await PostService.ViewPost(postId);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 // Comment
@@ -100,7 +130,13 @@ router.get('/:postId/comment', authenticateJWT, async (req, res, next) => {
 
     const result = await CommentService.GetComment(postId, options);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 // Like
@@ -110,7 +146,13 @@ router.post('/like', authenticateJWT, async (req, res, next) => {
 
     const result = await PostService.AddLike(postId, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 router.post('/unlike', authenticateJWT, async (req, res, next) => {
@@ -119,7 +161,13 @@ router.post('/unlike', authenticateJWT, async (req, res, next) => {
 
     const result = await PostService.RemoveLike(postId, user);
 
-    return res.json(result);
+    if (result.error)
+        return res.status(400).send({ status: 400, error: result.error });
+    else
+        return res.json({
+            status: 200,
+            data: result
+        });
 });
 
 module.exports = router;
