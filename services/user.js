@@ -43,9 +43,9 @@ module.exports = {
                 $or: [{ username }, { email }]
             });
             if (userRecord)
-                throw { message: 'Error! Username or Email already in used.' };
+                throw { error: 'Error! Username or Email already in used.' };
             if (password1 != password2)
-                throw { message: 'Error! Passwords do not match.' };
+                throw { error: 'Error! Password do not match.' };
             const password = await hashPassword(password1);
 
             const newUserEntry = await User.create({
@@ -71,7 +71,7 @@ module.exports = {
                 userRecord.password
             );
             if (!userRecord || !passwordCheck)
-                throw { message: 'Error! Incorrect username or password.' };
+                throw { error: 'Error! Incorrect username or password.' };
 
             const accessToken = generateToken(
                 {
@@ -109,7 +109,7 @@ module.exports = {
                 token,
                 refreshTokenSecret,
                 (err, user) => {
-                    if (err) throw { message: 'Invalid Token.' };
+                    if (err) throw { error: 'Invalid Token.' };
                     return user;
                 }
             );
@@ -117,7 +117,7 @@ module.exports = {
             const userRecord = await User.findOne({
                 username: verify.username
             });
-            if (!userRecord) throw { message: 'Invalid Token.' };
+            if (!userRecord) throw { error: 'Invalid Token.' };
 
             return {
                 accessToken: generateToken(

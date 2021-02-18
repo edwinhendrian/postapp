@@ -46,11 +46,11 @@ module.exports = {
             }).lean();
             if (!postRecord)
                 throw {
-                    message: 'Post does not exist or may already been deleted.'
+                    error: 'Post does not exist or may already been deleted.'
                 };
             if (postRecord.userId != user.id)
                 throw {
-                    message: 'Post can only be updated by the owner.'
+                    error: 'Post can only be updated by the owner.'
                 };
 
             const updatedPost = await Post.findOneAndUpdate(
@@ -75,11 +75,11 @@ module.exports = {
             }).lean();
             if (!postRecord)
                 throw {
-                    message: 'Post does not exist or may already been deleted.'
+                    error: 'Post does not exist or may already been deleted.'
                 };
             if (postRecord.userId != user.id)
                 throw {
-                    message: 'Post can only be deleted by the owner.'
+                    error: 'Post can only be deleted by the owner.'
                 };
 
             const updatedPost = await Post.findOneAndUpdate(
@@ -167,7 +167,7 @@ module.exports = {
 
             if (!postRecord)
                 throw {
-                    message: 'Post does not exist or may already been deleted.'
+                    error: 'Post does not exist or may already been deleted.'
                 };
 
             return {
@@ -188,7 +188,7 @@ module.exports = {
 
             if (!postRecord)
                 throw {
-                    message: 'Post does not exist or may already been deleted.'
+                    error: 'Post does not exist or may already been deleted.'
                 };
 
             const userFound = postRecord.likes.users.find((u) => {
@@ -223,7 +223,7 @@ module.exports = {
 
             if (!postRecord)
                 throw {
-                    message: 'Post does not exist or may already been deleted.'
+                    error: 'Post does not exist or may already been deleted.'
                 };
 
             const userFound = postRecord.likes.users.find((u) => {
