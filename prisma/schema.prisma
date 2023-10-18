@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  username String  @db.VarChar(100)
+  email    String  @db.VarChar(100)
+  password String  @db.VarChar(100)
+  name     String  @db.VarChar(100)
+  token    String? @db.VarChar(100)
+  posts    Post[]
+  likes    Like[]
+
+  @@unique([username, email])
+  @@map("users")
+}
+
+model Post {
+  id          Int      @id @default(autoincrement())
+  text        String   @db.VarChar(140)
+  post        Post?    @relation("Replies", fields: [post_id], references: [id]) // reply to
+  post_id     Int?
+  replies     Post[]   @relation("Replies")
+  reply_count Int      @default(0)
+  likes       Like[]
+  like_count  Int      @default(0)
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+
+  @@map("posts")
+}
+
+model Like {
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  post       Post     @relation(fields: [post_id], references: [id])
+  post_id    Int
+  created_at DateTime @default(now())
+
+  @@id([user_id, post_id])
+  @@map("likes")
+}
